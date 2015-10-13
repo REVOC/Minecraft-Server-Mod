@@ -2,11 +2,13 @@ hMod
 ====================
 hMod is a server mod for the Minecraft Beta server software. This is only the source code, if you don't know how to use this you won't find it useful.
 
+Volition21's fork: It's literally just a Beta 1.2 server. I'm just setting up a nice clean source I can work with.
+
 Compiling
 ---------
-Add a new project from existing sources in whatever IDE you use. Add minecraft_servero.jar as a library, and mysql-connector-java-bin.jar if need be. Your IDE should compile .class files that you can copy over into a clean minecraft_server.jar, then you can test your changes.
+Uuuuh new stuff using gradle.
 
 
 minecraft_servero.jar
 ---------
-You can get this file by running jarjar.bat in the jarjar folder and it will automaticly make minecraft_servero.jar
+Gradle won't build if you don't have it, go into jarjar and run jarar.jar with the paramters in jarjar.bat
