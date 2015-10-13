@@ -27,12 +27,10 @@ public class OEntityMinecart extends OEntity implements OIInventory, Container<O
 
     // hMod end
 
-    @Override
     public OItemStack[] getContents() {
         return al;
     }
 
-    @Override
     public void setContents(OItemStack[] values) {
         al = values;
     }

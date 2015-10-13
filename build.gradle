@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+version = '134'
+jar {
+manifest {
+        attributes 'Implementation-Title': 'hMod',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'Main'
+    }
+}
+
+repositories {
+   flatDir {
+       dirs 'jarjar'
+   }
+}
+
+dependencies {
+   compile name: 'jarjar'
+   compile name: 'minecraft_servero'
+   compile name: 'mysql-connector-java-bin'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+jar {
+	manifest {
+        attributes 'Implementation-Title': 'hMod',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'Main',
+        	'Class-Path' : configurations.compile.collect { it.getName() }.join(' ') + ' plugins/'
+    }
+}

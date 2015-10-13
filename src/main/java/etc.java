@@ -411,12 +411,10 @@ public class etc {
      * that they appear in server log.
      */
     private MessageReceiver serverConsole = new MessageReceiver() {
-                                              @Override
                                               public String getName() {
                                                   return "<Server>";
                                               }
 
-                                              @Override
                                               public void notify(String message) {
                                                   // Strip the colors.
                                                   message = message.replaceAll("\\u00A7[a-f0-9]", "");

@@ -27,7 +27,6 @@ public class DelayedTask implements Runnable, Delayed {
     /**
      * Runs the embedded task
      */
-    @Override
     public void run() {
         task.run();
     }
@@ -38,7 +37,6 @@ public class DelayedTask implements Runnable, Delayed {
      * @param unit
      *            the TimeUnit of the result
      */
-    @Override
     public long getDelay(TimeUnit unit) {
         return unit.convert(endOfDelay - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
@@ -49,7 +47,6 @@ public class DelayedTask implements Runnable, Delayed {
      * @param delayed
      *            the other object to compare to
      */
-    @Override
     public int compareTo(Delayed delayed) {
         DelayedTask other = (DelayedTask) delayed;
         if (endOfDelay < other.endOfDelay)
