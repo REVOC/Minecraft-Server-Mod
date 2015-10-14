@@ -2,10 +2,11 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
+archivesBaseName = 'VhMod'
 version = '134'
 jar {
 manifest {
-        attributes 'Implementation-Title': 'hMod',  
+        attributes 'Implementation-Title': archivesBaseName,  
         	'Implementation-Version': version,
         	'Main-Class': 'Main'
     }
@@ -29,7 +30,7 @@ test {
 
 jar {
 	manifest {
-        attributes 'Implementation-Title': 'hMod',  
+        attributes 'Implementation-Title': archivesBaseName,  
         	'Implementation-Version': version,
         	'Main-Class': 'Main',
         	'Class-Path' : configurations.compile.collect { it.getName() }.join(' ') + ' plugins/'
