@@ -22,16 +22,16 @@ import net.minecraft.server.MinecraftServer;
  */
 public class etc {
 
-    private static final Logger           log                 = Logger.getLogger("Minecraft");
-    private static final etc              instance            = new etc();
-    private static MinecraftServer        server;
-    private String                        usersLoc            = "users.txt", kitsLoc = "kits.txt", homeLoc = "homes.txt", warpLoc = "warps.txt", itemLoc = "items.txt", groupLoc = "groups.txt";
-    private String                        whitelistLoc        = "whitelist.txt", reservelistLoc = "reservelist.txt";
-    private String                        whitelistMessage    = "Not on whitelist.";
+    private static final Logger    log              = Logger.getLogger("Minecraft");
+    private static final etc       instance         = new etc();
+    private static MinecraftServer server;
+    private String                 usersLoc         = "users.txt", kitsLoc = "kits.txt", homeLoc = "homes.txt", warpLoc = "warps.txt", itemLoc = "items.txt", groupLoc = "groups.txt";
+    private String                 whitelistLoc     = "whitelist.txt", reservelistLoc = "reservelist.txt";
+    private String                 whitelistMessage = "Not on whitelist.";
 
-    private Set<Integer>                  allowedItems        = new HashSet<Integer>();
-    private Set<Integer>                  disallowedItems     = new HashSet<Integer>();
-    private Set<Integer>                  itemSpawnBlacklist  = new HashSet<Integer>();
+    private Set<Integer> allowedItems       = new HashSet<Integer>();
+    private Set<Integer> disallowedItems    = new HashSet<Integer>();
+    private Set<Integer> itemSpawnBlacklist = new HashSet<Integer>();
 
     private String[]                      motd                = null;
     private boolean                       saveHomes           = true;
@@ -58,10 +58,16 @@ public class etc {
     private String[]                      waterAnimals        = new String[] {};
     private int                           mobSpawnRate        = 2;
 
-    private boolean                       mobReload           = false;
-    private Class<?>[]                    animalsClass, monsterClass, waterAnimalsClass;
+    private boolean    mobReload = false;
+    private Class<?>[] animalsClass, monsterClass, waterAnimalsClass;
     
+    //TODO
+    //Stuff
     private etc() {
+        System.out.println("ETC instanced.");
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            System.out.println(ste);
+        }
         commands.put("/help", "[Page] - Shows a list of commands. 7 per page.");
         commands.put("/playerlist", "- Shows a list of players");
         commands.put("/reload", "- Reloads config");
@@ -169,7 +175,7 @@ public class etc {
             monsters = properties.getString("natural-monsters", "Spider,Zombie,Skeleton,Creeper").split(",");
             if (monsters.length == 1 && (monsters[0].equals(" ") || monsters[0].equals("")))
                 monsters = new String[] {};
-            validateMobGroup(monsters, "natural-monsters", new String[] {"PigZombie", "Ghast", "Slime", "Giant", "Spider", "Zombie", "Skeleton", "Creeper" });
+            validateMobGroup(monsters, "natural-monsters", new String[] { "PigZombie", "Ghast", "Slime", "Giant", "Spider", "Zombie", "Skeleton", "Creeper" });
 
             waterAnimals = properties.getString("natural-wateranimals", "Squid").split(",");
             if (waterAnimals.length == 1 && (waterAnimals[0].equals(" ") || waterAnimals[0].equals("")))
@@ -177,7 +183,7 @@ public class etc {
             validateMobGroup(waterAnimals, "natural-wateranimals", new String[] { "Squid" });
 
             mobReload = true;
-            
+
             mobSpawnRate = properties.getInt("natural-spawn-rate", mobSpawnRate);
 
             String autoHealString = properties.getString("auto-heal", "default");
@@ -187,9 +193,9 @@ public class etc {
                 autoHeal = PluginLoader.HookResult.PREVENT_ACTION;
 
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
-            
-            //TODO
-            //Change this.
+
+            // TODO
+            // Change this.
             File file = new File("version.txt");
             if (file.exists()) {
                 InputStreamReader ins = new InputStreamReader(file.toURI().toURL().openStream());
@@ -414,18 +420,18 @@ public class etc {
      * that they appear in server log.
      */
     private MessageReceiver serverConsole = new MessageReceiver() {
-                                              public String getName() {
-                                                  return "<Server>";
-                                              }
+        public String getName() {
+            return "<Server>";
+        }
 
-                                              public void notify(String message) {
-                                                  // Strip the colors.
-                                                  message = message.replaceAll("\\u00A7[a-f0-9]", "");
-                                                  if (message != null)
-                                                      log.info(message);
-                                              }
+        public void notify(String message) {
+            // Strip the colors.
+            message = message.replaceAll("\\u00A7[a-f0-9]", "");
+            if (message != null)
+                log.info(message);
+        }
 
-                                          };
+    };
 
     /**
      * Parses a console command
@@ -959,20 +965,25 @@ public class etc {
         return monsters;
     }
 
-    public Class<?>[] getMonstersClass(){
-        if(mobReload) reloadMonsterClass();
+    public Class<?>[] getMonstersClass() {
+        if (mobReload)
+            reloadMonsterClass();
         return monsterClass;
     }
-    public Class<?>[] getAnimalsClass(){
-        if(mobReload) reloadMonsterClass();
+
+    public Class<?>[] getAnimalsClass() {
+        if (mobReload)
+            reloadMonsterClass();
         return animalsClass;
     }
-    public Class<?>[] getWaterAnimalsClass(){
-        if(mobReload) reloadMonsterClass();
+
+    public Class<?>[] getWaterAnimalsClass() {
+        if (mobReload)
+            reloadMonsterClass();
         return waterAnimalsClass;
     }
-    
-    private void reloadMonsterClass(){
+
+    private void reloadMonsterClass() {
         monsterClass = new Class[getMonsters().length];
         animalsClass = new Class[getAnimals().length];
         waterAnimalsClass = new Class[getWaterAnimals().length];
@@ -983,10 +994,10 @@ public class etc {
             animalsClass[i] = OEntityList.getEntity(getAnimals()[i]);
         for (int i = 0; i < waterAnimalsClass.length; i++)
             waterAnimalsClass[i] = OEntityList.getEntity(getWaterAnimals()[i]);
-        
+
         mobReload = false;
     }
-    
+
     /**
      * Sets a list of mobs that are allowed to spawn naturally
      * 

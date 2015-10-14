@@ -137,6 +137,7 @@ public class Main {
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
         FileOutputStream fos = new FileOutputStream(fileLocation);
         fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+        fos.close();
     }
 
     public static void log(String str) {

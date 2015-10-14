@@ -27,8 +27,14 @@ public class OServerConfigurationManager {
     private File                 j;
     private File                 k;
     private OPlayerNBTManager    l;
-
+    
+    //TODO
+    //stuff
     public OServerConfigurationManager(MinecraftServer paramMinecraftServer) {
+        System.out.println("OServerConfigurationManager instanced.");
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            System.out.println(ste);
+        }
         etc.setServer(paramMinecraftServer);
         etc.getInstance().loadData();
         a.info("Note: your current classpath is: " + System.getProperty("java.class.path", "*UNKNOWN*"));
