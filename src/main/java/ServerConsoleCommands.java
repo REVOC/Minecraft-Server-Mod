@@ -269,9 +269,9 @@ public class ServerConsoleCommands {
                                                       @Override
                                                       void execute(MessageReceiver caller, String[] parameters) {
                                                           if (!etc.getInstance().getTainted())
-                                                              caller.notify(Colors.Gold + "Hey0 Server Mod Build " + etc.getInstance().getVersion());
+                                                              caller.notify(Colors.Gold + "VhMod Server Mod Build: " + etc.getInstance().getVersion());
                                                           else
-                                                              caller.notify(Colors.Gold + "Unofficial hMod Build " + etc.getInstance().getVersionStr());
+                                                              caller.notify(Colors.Gold + "Unofficial VhMod Build.");
                                                       }
                                                   };
 }

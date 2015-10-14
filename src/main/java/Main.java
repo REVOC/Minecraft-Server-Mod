@@ -14,11 +14,12 @@ import java.util.zip.CheckedInputStream;
 
 public class Main {
 
-    public static final long   minecraft_server                   = 280458825L; //Beta1.2_01
-    public static final long   minecraft_servero                  = 2976914608L; //Beta1.2_01 processed w/ jarjar
-    public static final long   mysql                              = 3001390372L; //mysql connector
-    public static final long   jarjar                             = 233379283L; //jarjar decompiler
-    public static final long   rules                              = 2575805698L; //rules for jarjar (For Beta1.2_01 obviously)
+    public static final long	minecraft_server					= 280458825L; //Beta1.2_01
+    public static final long	minecraft_servero					= 2392702871L; //Beta1.2_01 processed w/ jarjar
+    public static final long	mysql								= 3001390372L; //mysql connector
+    public static final long	jarjar								= 233379283L; //jarjar decompiler
+    public static final long	rules								= 2575805698L; //rules for jarjar (For Beta1.2_01 obviously)
+	public static final long	VCRC								= 1411154803L; //version.txt
 
     public static final Logger log                                = Logger.getLogger("Minecraft");
 

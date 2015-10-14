@@ -3,7 +3,8 @@ apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
 archivesBaseName = 'VhMod'
-version = '134'
+version = '1.0.0'
+
 jar {
 manifest {
         attributes 'Implementation-Title': archivesBaseName,  
