@@ -209,7 +209,7 @@ public class etc {
 					ins.close();
 					bufferedReader.close();
 				} else {
-					// Mangled version.txt too, Why.
+					// Mangled version.txt, Why.
 					version = "-1";
 					versionStr = "Undefined version";
 					tainted = true;

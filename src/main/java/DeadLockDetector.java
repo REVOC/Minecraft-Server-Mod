@@ -35,7 +35,7 @@ public class DeadLockDetector extends Thread {
     public DeadLockDetector() {
         super("DeadLockDetector");
         tmx = ManagementFactory.getThreadMXBean();
-        _log.info("hMod: Deadlock Detector Thread initialized.");
+        _log.info("VhMod: Deadlock Detector Thread initialized.");
     }
 
     @Override

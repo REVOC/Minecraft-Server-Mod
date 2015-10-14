@@ -284,14 +284,14 @@ public class PluginLoader {
     public void loadPlugins() {
         if (loaded)
             return;
-        log.info("hMod: Loading plugins...");
+        log.info("VhMod: Loading plugins...");
         String[] classes = properties.getString("plugins", "").split(",");
         for (String sclass : classes) {
             if (sclass.equals(""))
                 continue;
             loadPlugin(sclass.trim());
         }
-        log.info("hMod: Loaded " + plugins.size() + " plugins.");
+        log.info("VhMod: Loaded " + plugins.size() + " plugins.");
         loaded = true;
     }
 
