@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * 
  */
 public class DeadLockDetector extends Thread {
-    private static Logger      _log       = Logger.getLogger("Minecraft");
+	public static Logger log = Logger.getLogger("Minecraft");
 
     private static final int   _sleepTime = 5 * 1000;
 
@@ -35,7 +35,7 @@ public class DeadLockDetector extends Thread {
     public DeadLockDetector() {
         super("DeadLockDetector");
         tmx = ManagementFactory.getThreadMXBean();
-        _log.info("VhMod: Deadlock Detector Thread initialized.");
+        log.info("VhMod: Deadlock Detector initialized.");
     }
 
     @Override
@@ -64,11 +64,11 @@ public class DeadLockDetector extends Thread {
                         while ((dl = tmx.getThreadInfo(new long[] { dl.getLockOwnerId() }, true, true)[0]).getThreadId() != ti.getThreadId())
                             info += "\t" + dl.getThreadName() + " is waiting to lock " + dl.getLockInfo().toString() + " which is held by " + dl.getLockOwnerName() + "\n";
                     }
-                    _log.warning(info);
+                    log.warning(info);
                 }
                 Thread.sleep(_sleepTime);
             } catch (Exception e) {
-                _log.log(Level.WARNING, "DeadLockDetector: ", e);
+                log.log(Level.WARNING, "DeadLockDetector: ", e);
             }
     }
 }

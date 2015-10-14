@@ -123,8 +123,8 @@ public class Player extends HumanEntity implements MessageReceiver {
             if ((Boolean) etc.getLoader().callHook(PluginLoader.Hook.CHAT, new Object[] { this, message }))
                 return;
 
-            String chat = "<" + getColor() + getName() + Colors.White + "> " + message;
-            log.log(Level.INFO, "<" + getName() + "> " + message);
+            String chat = "" + getColor() + getName() + Colors.White + ": " + message;
+            log.log(Level.INFO, "" + getName() + ": " + message);
             etc.getServer().messageAll(chat);
         }
     }

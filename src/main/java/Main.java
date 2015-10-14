@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -22,7 +23,7 @@ public class Main {
 	public static final long jarjar = 233379283L; // jarjar decompiler
 	public static final long rules = 2575805698L; // rules for jarjar (For
 													// Beta1.2_01 obviously)
-	public static final long VCRC = 1411154803L; // version.txt
+	public static final long VCRC = 1677797663L; // version.txt
 
 	private static final String URL = "http://hackion.com/mirror/Minecraft/B1.2_01/";
 
@@ -32,10 +33,35 @@ public class Main {
 	// Change this.
 	public static void main(String[] args) throws IOException {
 
+		if (!fileExists("version.txt")) {
+			PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
+			writer.println("121-1");
+			writer.close();
+		}
+
+		if (!fileExists("plugins")) {
+			File dir = new File("plugins");
+			dir.mkdir();
+			PrintWriter writer = new PrintWriter("plugins/readme.txt", "UTF-8");
+			writer.println(
+					"Place your plugins in here, then add the filename (WITHOUT the .jar) to plugins in server.properties like so:");
+			writer.println("plugins=Plugin1,Plugin2,Plugin3,etc");
+			writer.close();
+		}
+
+		if (!fileExists("mysql-connector-java-bin.jar")) {
+			log("mysql-connector-java-bin.jar is missing, Downloading...");
+			downloadFile(URL + "mysql-connector-java-bin.jar", "mysql-connector-java-bin.jar");
+			checkCRC32("mysql-connector-java-bin.jar", mysql);
+			log("Loading jarjar.jar...");
+			dynamicLoadJar("mysql-connector-java-bin.jar");
+			log("Finished downloading & loading mysql-connector-java-bin.jar.");
+		}
+
 		if (!fileExists("jarjar.jar")) {
 			log("jarjar.jar is missing, Downloading...");
 			downloadFile(URL + "jarjar.jar", "jarjar.jar");
-			checkCRC32("jarjar.jar", minecraft_server);
+			checkCRC32("jarjar.jar", jarjar);
 			log("Loading jarjar.jar...");
 			dynamicLoadJar("jarjar.jar");
 			log("Finished downloading & loading jarjar.jar.");
@@ -44,7 +70,7 @@ public class Main {
 		if (!fileExists("rules.rules")) {
 			log("rules.rules is missing, Downloading...");
 			downloadFile(URL + "rules.rules", "rules.rules");
-			checkCRC32("rules.rules", minecraft_server);
+			checkCRC32("rules.rules", rules);
 			log("Finished downloading rules.rules.");
 		}
 

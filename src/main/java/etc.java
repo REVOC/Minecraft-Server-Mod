@@ -224,7 +224,6 @@ public class etc {
 			// Just in case...
 			motd = new String[] { "Type /help for a list of commands." };
 		}
-
 	}
 
 	/**
