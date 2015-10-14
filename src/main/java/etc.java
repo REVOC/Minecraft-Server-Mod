@@ -187,6 +187,9 @@ public class etc {
                 autoHeal = PluginLoader.HookResult.PREVENT_ACTION;
 
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
+            
+            //TODO
+            //Change this.
             File file = new File("version.txt");
             if (file.exists()) {
                 InputStreamReader ins = new InputStreamReader(file.toURI().toURL().openStream());

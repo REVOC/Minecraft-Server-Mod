@@ -14,21 +14,16 @@ import java.util.zip.CheckedInputStream;
 
 public class Main {
 
-    public static final long   minecraft_server                   = 280458825L;
-
-    public static final long   minecraft_servero                  = 2976914608L;
-
-    public static final long   minecraft_servero_runecraft        = 2581072959L;
-    public static final long   minecraft_servero_runecraft_winrar = 3296853903L;
-
-    public static final long[] minecraft_servero_list             = new long[] { minecraft_servero, minecraft_servero_runecraft, minecraft_servero_runecraft_winrar };
-
-    public static final long   mysql                              = 3001390372L;
-    public static final long   jarjar                             = 233379283L;
-    public static final long   rules                              = 2575805698L;
+    public static final long   minecraft_server                   = 280458825L; //Beta1.2_01
+    public static final long   minecraft_servero                  = 2976914608L; //Beta1.2_01 processed w/ jarjar
+    public static final long   mysql                              = 3001390372L; //mysql connector
+    public static final long   jarjar                             = 233379283L; //jarjar decompiler
+    public static final long   rules                              = 2575805698L; //rules for jarjar (For Beta1.2_01 obviously)
 
     public static final Logger log                                = Logger.getLogger("Minecraft");
 
+    //TODO
+    //Change this.
     public static void main(String[] args) throws IOException {
 
         if (!fileExists("minecraft_servero.jar")) {
@@ -55,12 +50,12 @@ public class Main {
             } catch (Throwable t) {
                 log.log(Level.SEVERE, null, t);
             }
-            checkCRC32("minecraft_servero.jar", minecraft_servero_list);
+            checkCRC32("minecraft_servero.jar", minecraft_servero);
 
             log("Finished converting minecraft_server.jar, Starting minecraft server...");
             dynamicLoadJar("minecraft_servero.jar");
         } else
-            checkCRC32("minecraft_servero.jar", minecraft_servero_list);
+            checkCRC32("minecraft_servero.jar", minecraft_servero);
 
         if (etc.getInstance().getDataSourceType().equalsIgnoreCase("mysql"))
             checkCRC32("mysql-connector-java-bin.jar", mysql);
