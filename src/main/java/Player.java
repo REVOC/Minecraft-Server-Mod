@@ -318,13 +318,10 @@ public class Player extends HumanEntity implements MessageReceiver {
 				} else
 					sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
 			} else if (cmd.equalsIgnoreCase("/tppos")) {
-				for (int i = 0; i < split.length; i++) {
-					System.out.println("split[" + i + "]" + " " + split[i]);
-				}
 				if (split.length == 4) {
 					try {
-						this.teleportTo(Integer.valueOf(split[1]), Integer.valueOf(split[2]),
-								Integer.valueOf(split[3]), this.getRotation(), this.getPitch());
+						this.teleportTo(Integer.valueOf(split[1]), Integer.valueOf(split[2]), Integer.valueOf(split[3]),
+								this.getRotation(), this.getPitch());
 					} catch (Exception E) {
 						E.printStackTrace();
 						this.sendMessage(
