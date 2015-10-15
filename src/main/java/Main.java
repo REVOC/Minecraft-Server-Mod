@@ -34,9 +34,11 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		if (!fileExists("version.txt")) {
-			PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
-			writer.println("121-1");
-			writer.close();
+			if (!fileExists("groups.txt")) {
+				PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
+				writer.println("121-1");
+				writer.close();
+			}
 		}
 
 		if (!fileExists("plugins")) {
