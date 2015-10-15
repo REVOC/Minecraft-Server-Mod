@@ -319,9 +319,19 @@ public class Player extends HumanEntity implements MessageReceiver {
 					sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
 			} else if (cmd.equalsIgnoreCase("/tppos")) {
 				if (split.length == 4) {
+					int x = 1;
+					int z = 1;
 					try {
-						this.teleportTo(Integer.valueOf(split[1]), Integer.valueOf(split[2]), Integer.valueOf(split[3]),
-								this.getRotation(), this.getPitch());
+						x = Integer.valueOf(split[1]);
+						z = Integer.valueOf(split[3]);
+						if (x == 0) {
+							x = 1;
+						}
+						if (z == 0) {
+							z = 1;
+						}
+						System.out.println("Teleporting to: " + x + "," + Integer.valueOf(split[2]) + "," + z);
+						this.teleportTo(x, Integer.valueOf(split[2]), z, this.getRotation(), this.getPitch());
 					} catch (Exception E) {
 						E.printStackTrace();
 						this.sendMessage(
@@ -332,9 +342,19 @@ public class Player extends HumanEntity implements MessageReceiver {
 
 				if (split.length == 5) {
 					Player target = etc.getServer().getPlayer(split[1]);
+					double x = 0.5;
+					double z = 0.5;
 					try {
-						target.teleportTo(Integer.valueOf(split[2]), Integer.valueOf(split[3]),
-								Integer.valueOf(split[4]), target.getRotation(), target.getPitch());
+						x = Double.valueOf(split[2]);
+						z = Double.valueOf(split[4]);
+						if (x == 0.0) {
+							x = 0.5;
+						}
+						if (z == 0.0) {
+							z = 0.5;
+						}
+						System.out.println("Teleporting to: " + x + "," + Integer.valueOf(split[2]) + "," + z);
+						target.teleportTo(x, Integer.valueOf(split[3]), z, target.getRotation(), target.getPitch());
 					} catch (Exception E) {
 						E.printStackTrace();
 						this.sendMessage(
