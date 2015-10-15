@@ -89,18 +89,26 @@ public class OServerConfigurationManager {
 		d.b(paramOEntityPlayerMP);
 	}
 
-	// TODO
-	// Fix login?
+	/*
+	 * 
+	 * Skins won't get fetched for new players, it's all client side and there's
+	 * nothing I can do about it.
+	 * 
+	 */
 	public OEntityPlayerMP a(ONetLoginHandler paramONetLoginHandler, String paramString1, String paramString2) {
 		if (!etc.getLoader().isLoaded()) {
 			paramONetLoginHandler.a("The server is not finished loading yet!");
 			return null;
 		}
 
-		if (f.contains(paramString1.trim().toLowerCase())) {
-			paramONetLoginHandler.a("You are banned from this server!");
-			return null;
+		String UUID = UUIDTools.getUUID(paramString1.trim());
+		if (UUID != null) {
+			if (f.contains(UUID)) {
+				paramONetLoginHandler.a("You are banned from this server!");
+				return null;
+			}
 		}
+
 		// hMod: whole section below is modified to handle whitelists etc
 		OEntityPlayerMP temp = new OEntityPlayerMP(c, c.e, paramString1, new OItemInWorldManager(c.e));
 		Player player = temp.getPlayer();

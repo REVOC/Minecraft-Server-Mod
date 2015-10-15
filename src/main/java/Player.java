@@ -1,3 +1,9 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -612,8 +618,30 @@ public class Player extends HumanEntity implements MessageReceiver {
 						return;
 					}
 
+					// TODO
+
+					// Deprecated
 					// adds player to ban list
-					etc.getServer().ban(player.getName());
+					// etc.getServer().ban(player.getName());
+
+					/*
+					 * This will fetch the UUID of the player, if UUID returns
+					 * null then the account is not real and is IP banned.
+					 */
+					String UUID = UUIDTools.getUUID(player.getName());
+					if (UUID != null) {
+						etc.getServer().ban(UUID);
+					} else {
+						log.info(Colors.Rose + "User " + player.getName()
+								+ " is not using a real minecraft account, IP banning...");
+						etc.getMCServer().f.c(player.getIP());
+						etc.getLoader().callHook(PluginLoader.Hook.IPBAN, new Object[] { this, player,
+								split.length >= 3 ? etc.combineSplit(2, split, " ") : "" });
+						log.log(Level.INFO, "IP Banning " + player.getName() + " (IP: " + player.getIP() + ")");
+						sendMessage(Colors.Rose + "IP Banning " + player.getName() + " (IP: " + player.getIP() + ")");
+						player.kick("IP Banned by " + getName() + ".");
+						return;
+					}
 
 					etc.getLoader().callHook(PluginLoader.Hook.BAN,
 							new Object[] { this, player, split.length >= 3 ? etc.combineSplit(2, split, " ") : "" });
@@ -625,18 +653,34 @@ public class Player extends HumanEntity implements MessageReceiver {
 					log.log(Level.INFO, "Banning " + player.getName());
 					sendMessage(Colors.Rose + "Banning " + player.getName());
 				} else {
+
+					String UUID = UUIDTools.getUUID(split[1]);
+					if (UUID != null) {
+						etc.getServer().ban(UUID);
+						log.log(Level.INFO, "Banning " + split[1]);
+						sendMessage(Colors.Rose + "Banning " + split[1]);
+					} else {
+						sendMessage(Colors.Rose + "That user does not exist.");
+					}
 					// sendMessage(Colors.Rose + "Can't find user " + split[1] +
 					// ".");
-					etc.getServer().ban(split[1]);
-					log.log(Level.INFO, "Banning " + split[1]);
-					sendMessage(Colors.Rose + "Banning " + split[1]);
+					// etc.getServer().ban(split[1]);
 				}
 			} else if (cmd.equalsIgnoreCase("/unban")) {
 				if (split.length != 2) {
 					sendMessage(Colors.Rose + "Correct usage is: /unban [player]");
 					return;
 				}
-				etc.getServer().unban(split[1]);
+
+				String UUID = UUIDTools.getUUID(split[1]);
+				if (UUID != null) {
+					etc.getServer().unban(UUID);
+				} else {
+					sendMessage(Colors.Rose + "User " + split[1]
+							+ " does not exist, May have been automatically IP banned instead.");
+				}
+
+				// etc.getServer().unban(split[1]);
 				sendMessage(Colors.Rose + "Unbanned " + split[1]);
 			} else if (cmd.equalsIgnoreCase("/unbanip")) {
 				if (split.length != 2) {
