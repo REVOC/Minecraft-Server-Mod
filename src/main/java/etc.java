@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -446,12 +447,80 @@ public class etc {
 			return false;
 
 		boolean dontParseRegular = true;
-		if (split[0].equalsIgnoreCase("save-all")) {
+		if (split[0].equalsIgnoreCase("pardon")) {
+			if (split.length < 2) {
+				log.info("Pardons a banned player so that they can connect again.");
+				log.info("Correct usage is: pardon [player]");
+				return true;
+			}
+
+			String UUID = UUIDTools.getUUID(split[1]);
+			if (UUID != null) {
+				etc.getServer().unban(UUID);
+				log.info("Unbanned " + split[1]);
+			} else {
+				log.info("User " + split[1] + " does not exist, May have been automatically IP banned instead.");
+			}
+			return true;
+
+		} else if (split[0].equalsIgnoreCase("ban")) {
+			if (split.length < 2) {
+				log.info("Bans a player from the server.");
+				log.info("Correct usage is: ban [player] <reason>");
+				return true;
+			}
+
+			List<Player> players = etc.getServer().getPlayerList();
+			Player target = null;
+			for (Player p : players) {
+				if (p.getName().equals(split[1])) {
+					target = p;
+					break;
+				}
+			}
+
+			if (target != null) {
+				String UUID = UUIDTools.getUUID(target);
+				if (UUID != null) {
+					etc.getServer().ban(UUID);
+					etc.getLoader().callHook(PluginLoader.Hook.BAN,
+							new Object[] { this, target, split.length >= 3 ? etc.combineSplit(2, split, " ") : "" });
+
+					if (split.length > 2)
+						target.kick("Banned by " + "CONSOLE" + ": " + etc.combineSplit(2, split, " "));
+					else
+						target.kick("Banned by " + "CONSOLE" + ".");
+					log.log(Level.INFO, "Banning " + target.getName());
+					return true;
+				} else {
+					log.info(Colors.Rose + "User " + target.getName()
+							+ " is not using a real minecraft account, IP banning...");
+					etc.getMCServer().f.c(target.getIP());
+					etc.getLoader().callHook(PluginLoader.Hook.IPBAN,
+							new Object[] { this, target, split.length >= 3 ? etc.combineSplit(2, split, " ") : "" });
+					log.log(Level.INFO, "IP Banning " + target.getName() + " (IP: " + target.getIP() + ")");
+					target.kick("IP Banned by " + "CONSOLE" + ".");
+					return true;
+				}
+			} else {
+				log.info(split[1] + " is not online, attempting lookup...");
+				String UUID = UUIDTools.getUUID(split[1]);
+				if (UUID != null) {
+					etc.getServer().ban(UUID);
+					log.log(Level.INFO, split[1] + " has been banned.");
+					return true;
+				} else {
+					log.info(split[1] + " is not a real account.");
+				}
+			}
+
+		} else if (split[0].equalsIgnoreCase("save-all")) {
 			dontParseRegular = false;
 			getServer().saveInventories();
 		} else if (split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("mod-help")) {
-			if (split[0].equalsIgnoreCase("help"))
+			if (split[0].equalsIgnoreCase("help")) {
 				dontParseRegular = false;
+			}
 			log.info("Server mod help:");
 			log.info("help          Displays this mod's and server's help");
 			log.info("mod-help      Displays this mod's help");
