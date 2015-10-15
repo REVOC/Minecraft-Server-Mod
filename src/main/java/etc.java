@@ -74,6 +74,7 @@ public class etc {
 		commands.put("/ban", "[Player] <Reason> - Bans the player");
 		commands.put("/unban", "[Player] - Unbans the player");
 		commands.put("/mute", "[Player] - Toggles mute on player.");
+		commands.put("/tppos", "<Player> [x] [y] [z] - Teleports a player to a location.");
 		commands.put("/tp", "[Player] - Teleports to player. Credits to Zet from SA");
 		commands.put("/tphere", "[Player] - Teleports the player to you");
 		commands.put("/kick", "[Player] <Reason> - Kicks player");
@@ -84,7 +85,7 @@ public class etc {
 		commands.put("/home", "- Teleports you home");
 		commands.put("/sethome", "- Sets your home");
 		commands.put("/setspawn", "- Sets the spawn point to your position.");
-		commands.put("/me", "[Message] - * hey0 says hi!");
+		commands.put("/me", "[Message] - * Volition21 says hi!");
 		commands.put("/msg", "[Player] [Message] - Sends a message to player");
 		commands.put("/spawn", "- Teleports you to spawn");
 		commands.put("/warp", "[Warp] - Warps to the specified warp.");
