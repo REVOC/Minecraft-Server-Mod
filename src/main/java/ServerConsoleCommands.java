@@ -125,6 +125,14 @@ public class ServerConsoleCommands {
                                                                   caller.notify("Player does not exist.");
                                                                   return;
                                                               }
+                                                              
+                                                              if(caller instanceof Player){
+                                                            	  Player p = (Player) caller;  
+                                                            	  	if (!(p.hasControlOver(player))) {
+                                                            	  		p.sendMessage(Colors.Rose + "You can't modify that user.");
+                                                    					return;
+                                                            	  	}
+                                                              }
 
                                                               String key = parameters[2];
                                                               String value = parameters[3];

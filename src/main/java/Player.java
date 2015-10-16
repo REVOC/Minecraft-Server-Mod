@@ -1096,12 +1096,11 @@ public class Player extends HumanEntity implements MessageReceiver {
 		if (player.hasNoGroups())
 			return true;
 		for (String str : player.getGroups()) {
-			for (String g : groups) {
-				if (str.equals(g)) {
-					isInGroup = true;
-					return isInGroup;
-				}
-			}
+			if (isInGroup(str))
+				isInGroup = true;
+			else
+				continue;
+			break;
 		}
 
 		return isInGroup;
