@@ -58,7 +58,7 @@ public class Main {
 		} else {
 
 			if (!fileExists("version.txt")) {
-				if (!fileExists("groups.txt")) {
+				if (!fileExists("minecraft_servero.jar")) {
 					PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
 					writer.println("121-1");
 					writer.close();
