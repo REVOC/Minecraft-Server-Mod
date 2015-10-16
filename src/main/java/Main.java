@@ -1,3 +1,6 @@
+import java.awt.FlowLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Main {
 
@@ -33,88 +39,107 @@ public class Main {
 	// Change this.
 	public static void main(String[] args) throws IOException {
 
-		if (!fileExists("version.txt")) {
-			if (!fileExists("groups.txt")) {
-				PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
-				writer.println("121-1");
+		if (System.console() == null) {
+			JFrame frame = new JFrame("VhMod");
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.addWindowListener(new WindowAdapter() {
+				public void windowClosed(WindowEvent evt) {
+					System.exit(0);
+				}
+			});
+			FlowLayout layout = new FlowLayout();
+			layout.setAlignment(FlowLayout.CENTER);
+			frame.setLayout(layout);
+			frame.getContentPane().add(new JLabel("This jar should be executed from a command processor."));
+			frame.getContentPane().add(new JLabel("Command: \"java -jar VhMod-#.#.#.jar\""));
+			frame.setSize(350, 90);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+		} else {
+
+			if (!fileExists("version.txt")) {
+				if (!fileExists("groups.txt")) {
+					PrintWriter writer = new PrintWriter("version.txt", "UTF-8");
+					writer.println("121-1");
+					writer.close();
+				}
+			}
+
+			if (!fileExists("plugins")) {
+				File dir = new File("plugins");
+				dir.mkdir();
+				PrintWriter writer = new PrintWriter("plugins/readme.txt", "UTF-8");
+				writer.println(
+						"Place your plugins in here, then add the filename (WITHOUT the .jar) to plugins in server.properties like so:");
+				writer.println("plugins=Plugin1,Plugin2,Plugin3,etc");
 				writer.close();
 			}
-		}
 
-		if (!fileExists("plugins")) {
-			File dir = new File("plugins");
-			dir.mkdir();
-			PrintWriter writer = new PrintWriter("plugins/readme.txt", "UTF-8");
-			writer.println(
-					"Place your plugins in here, then add the filename (WITHOUT the .jar) to plugins in server.properties like so:");
-			writer.println("plugins=Plugin1,Plugin2,Plugin3,etc");
-			writer.close();
-		}
+			if (!fileExists("mysql-connector-java-bin.jar")) {
+				log("mysql-connector-java-bin.jar is missing, Downloading...");
+				downloadFile(URL + "mysql-connector-java-bin.jar", "mysql-connector-java-bin.jar");
+				checkCRC32("mysql-connector-java-bin.jar", mysql);
+				log("Loading jarjar.jar...");
+				dynamicLoadJar("mysql-connector-java-bin.jar");
+				log("Finished downloading & loading mysql-connector-java-bin.jar.");
+			}
 
-		if (!fileExists("mysql-connector-java-bin.jar")) {
-			log("mysql-connector-java-bin.jar is missing, Downloading...");
-			downloadFile(URL + "mysql-connector-java-bin.jar", "mysql-connector-java-bin.jar");
-			checkCRC32("mysql-connector-java-bin.jar", mysql);
-			log("Loading jarjar.jar...");
-			dynamicLoadJar("mysql-connector-java-bin.jar");
-			log("Finished downloading & loading mysql-connector-java-bin.jar.");
-		}
+			if (!fileExists("jarjar.jar")) {
+				log("jarjar.jar is missing, Downloading...");
+				downloadFile(URL + "jarjar.jar", "jarjar.jar");
+				checkCRC32("jarjar.jar", jarjar);
+				log("Loading jarjar.jar...");
+				dynamicLoadJar("jarjar.jar");
+				log("Finished downloading & loading jarjar.jar.");
+			}
 
-		if (!fileExists("jarjar.jar")) {
-			log("jarjar.jar is missing, Downloading...");
-			downloadFile(URL + "jarjar.jar", "jarjar.jar");
-			checkCRC32("jarjar.jar", jarjar);
-			log("Loading jarjar.jar...");
-			dynamicLoadJar("jarjar.jar");
-			log("Finished downloading & loading jarjar.jar.");
-		}
+			if (!fileExists("rules.rules")) {
+				log("rules.rules is missing, Downloading...");
+				downloadFile(URL + "rules.rules", "rules.rules");
+				checkCRC32("rules.rules", rules);
+				log("Finished downloading rules.rules.");
+			}
 
-		if (!fileExists("rules.rules")) {
-			log("rules.rules is missing, Downloading...");
-			downloadFile(URL + "rules.rules", "rules.rules");
-			checkCRC32("rules.rules", rules);
-			log("Finished downloading rules.rules.");
-		}
+			if (!fileExists("minecraft_servero.jar")) {
+				if (!fileExists("minecraft_server.jar")) {
+					log("Vanilla server jar file is missing, Downloading...");
+					downloadFile(URL + "minecraft_server.jar", "minecraft_server.jar");
+					checkCRC32("minecraft_server.jar", minecraft_server);
+					log("Finished downloading minecraft_server.jar.");
+				} else
+					log("Creating minecraft_servero.jar now...");
 
-		if (!fileExists("minecraft_servero.jar")) {
-			if (!fileExists("minecraft_server.jar")) {
-				log("Vanilla server jar file is missing, Downloading...");
-				downloadFile(URL + "minecraft_server.jar", "minecraft_server.jar");
-				checkCRC32("minecraft_server.jar", minecraft_server);
-				log("Finished downloading minecraft_server.jar.");
-			} else
-				log("Creating minecraft_servero.jar now...");
+				try {
+					com.tonicsystems.jarjar.Main.main(
+							new String[] { "process", "rules.rules", "minecraft_server.jar", "minecraft_servero.jar" });
+				} catch (Throwable t) {
+					log.log(Level.SEVERE, null, t);
+				}
+				checkCRC32("minecraft_servero.jar", minecraft_servero);
+				log("minecraft_servero.jar successfully created.");
 
+				log("Loading minecraft server now...");
+				dynamicLoadJar("minecraft_servero.jar");
+			} else {
+				checkCRC32("minecraft_servero.jar", minecraft_servero);
+			}
+
+			if (etc.getInstance().getDataSourceType().equalsIgnoreCase("mysql")) {
+				checkCRC32("mysql-connector-java-bin.jar", mysql);
+			}
+			if (checkForUpdate()) {
+				System.out.println("Update found.");
+				// derp.
+			}
+
+			// My mod doesn't work with gui.
 			try {
-				com.tonicsystems.jarjar.Main.main(
-						new String[] { "process", "rules.rules", "minecraft_server.jar", "minecraft_servero.jar" });
+				net.minecraft.server.MinecraftServer.main(new String[] { "nogui" });
 			} catch (Throwable t) {
 				log.log(Level.SEVERE, null, t);
 			}
-			checkCRC32("minecraft_servero.jar", minecraft_servero);
-			log("minecraft_servero.jar successfully created.");
-
-			log("Loading minecraft server now...");
-			dynamicLoadJar("minecraft_servero.jar");
-		} else {
-			checkCRC32("minecraft_servero.jar", minecraft_servero);
+			new DeadLockDetector();
 		}
-
-		if (etc.getInstance().getDataSourceType().equalsIgnoreCase("mysql")) {
-			checkCRC32("mysql-connector-java-bin.jar", mysql);
-		}
-		if (checkForUpdate()) {
-			System.out.println("Update found.");
-			// derp.
-		}
-
-		// My mod doesn't work with gui.
-		try {
-			net.minecraft.server.MinecraftServer.main(new String[] { "nogui" });
-		} catch (Throwable t) {
-			log.log(Level.SEVERE, null, t);
-		}
-		new DeadLockDetector();
 	}
 
 	public static boolean fileExists(String filename) {
