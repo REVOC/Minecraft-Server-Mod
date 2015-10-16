@@ -217,6 +217,13 @@ public class etc {
 					tainted = true;
 				}
 			}
+
+			/*
+			 * Load the UUID cache.
+			 */
+			log.info("UUIDCache loaded.");
+			UUIDTools.loadUUIDCache();
+			UUIDTools.saveUUIDCache();
 		} catch (
 
 		Exception e)
@@ -447,6 +454,15 @@ public class etc {
 			return false;
 
 		boolean dontParseRegular = true;
+
+		/*
+		 * The ban and pardon commands are handled here and not in
+		 * "ServerConsoleCommands" as I'm attempting to alter the original
+		 * Infrastructure as little as possible.
+		 * 
+		 * Read: This is a patch over the existing ban and pardon commands,
+		 * which would usually be processed by net.minecraft.server.
+		 */
 		if (split[0].equalsIgnoreCase("pardon")) {
 			if (split.length < 2) {
 				log.info("Pardons a banned player so that they can connect again.");
