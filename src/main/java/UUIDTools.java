@@ -112,7 +112,7 @@ public class UUIDTools {
 	 * @return Username's UUID
 	 */
 	public static String getUUID(String username) {
-		return getRawUUID(getRawUUID(username));
+		return getRawUUID(username);
 	}
 
 	/**
