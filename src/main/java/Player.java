@@ -122,9 +122,10 @@ public class Player extends HumanEntity implements MessageReceiver {
 					+ " in chat");
 			return;
 		}
-		if (message.startsWith("/"))
+
+		if (message.startsWith("/")) {
 			command(message);
-		else {
+		} else {
 			if (isMuted()) {
 				sendMessage(Colors.Rose + "You are currently muted.");
 				return;
