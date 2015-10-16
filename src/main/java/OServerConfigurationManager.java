@@ -4,10 +4,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -27,6 +30,7 @@ public class OServerConfigurationManager {
 	private File j;
 	private File k;
 	private OPlayerNBTManager l;
+	private Pattern badChatPattern = Pattern.compile("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
 
 	// TODO
 	// stuff
@@ -96,6 +100,12 @@ public class OServerConfigurationManager {
 	 * 
 	 */
 	public OEntityPlayerMP a(ONetLoginHandler paramONetLoginHandler, String paramString1, String paramString2) {
+		Matcher namematcher = badChatPattern.matcher(paramString1);
+		if (namematcher.find()) {
+			paramONetLoginHandler.a("Illegal characters '" + namematcher.group() + "' in username");
+			return null;
+		}
+
 		if (!etc.getLoader().isLoaded()) {
 			paramONetLoginHandler.a("The server is not finished loading yet!");
 			return null;

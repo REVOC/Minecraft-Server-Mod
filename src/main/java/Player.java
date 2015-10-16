@@ -618,8 +618,6 @@ public class Player extends HumanEntity implements MessageReceiver {
 						return;
 					}
 
-					// TODO
-
 					// Deprecated
 					// adds player to ban list
 					// etc.getServer().ban(player.getName());
@@ -1054,7 +1052,8 @@ public class Player extends HumanEntity implements MessageReceiver {
 	}
 
 	/**
-	 * Checks to see if this player is in the specified group
+	 * Checks to see if this player is in the specified group which may be
+	 * inherited.
 	 * 
 	 * @param group
 	 * @return
@@ -1074,8 +1073,9 @@ public class Player extends HumanEntity implements MessageReceiver {
 		if (g == null || group == null)
 			return false;
 
-		if (g.Name.equalsIgnoreCase(group))
+		if (g.Name.equalsIgnoreCase(group)) {
 			return true;
+		}
 
 		if (g.InheritedGroups != null)
 			for (String str : g.InheritedGroups) {
