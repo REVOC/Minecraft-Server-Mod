@@ -2,85 +2,75 @@ import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 public class ServerConsoleCommands {
-    private static final Logger                      log      = Logger.getLogger("Minecraft");
-    private static ServerConsoleCommands             instance;
-    private final LinkedHashMap<String, BaseCommand> commands = new LinkedHashMap<String, BaseCommand>();
+	private static final Logger log = Logger.getLogger("Minecraft");
+	private static ServerConsoleCommands instance;
+	private final LinkedHashMap<String, BaseCommand> commands = new LinkedHashMap<String, BaseCommand>();
 
-    private ServerConsoleCommands() {
-        add("reload", reload);
-        add("listplugins", listplugins);
-        add("enableplugin", enableplugin);
-        add("reloadplugin", reloadplugin);
-        add("disableplugin", disableplugin);
-        add("modify", modify);
-        add("mp", modify);
-        add("reservelist", reservelist);
-        add("whitelist", whitelist);
-        add("version", version);
-    }
+	private ServerConsoleCommands() {
+		add("reload", reload);
+		add("listplugins", listplugins);
+		add("enableplugin", enableplugin);
+		add("reloadplugin", reloadplugin);
+		add("disableplugin", disableplugin);
+		add("modify", modify);
+		add("mp", modify);
+		add("reservelist", reservelist);
+		add("whitelist", whitelist);
+		add("version", version);
+	}
 
-    /**
-     * Add a command to the server list.
-     * 
-     * @param name
-     * @param cmd
-     */
-    public void add(String name, BaseCommand cmd) {
-        if (name != null && cmd != null)
-            commands.put(name, cmd);
-    }
+	/**
+	 * Add a command to the server list.
+	 * 
+	 * @param name
+	 * @param cmd
+	 */
+	public void add(String name, BaseCommand cmd) {
+		if (name != null && cmd != null)
+			commands.put(name, cmd);
+	}
 
-    /**
-     * Remove a command from the server list.
-     * 
-     * @param name
-     */
-    public void remove(String name) {
-        if (name != null) {
-            etc.getInstance().removeCommand(name);
-            commands.remove(name);
-        }
-    }
+	/**
+	 * Remove a command from the server list.
+	 * 
+	 * @param name
+	 */
+	public void remove(String name) {
+		if (name != null) {
+			etc.getInstance().removeCommand(name);
+			commands.remove(name);
+		}
+	}
 
-    /**
-     * Performs a lookup for a command of the given name and executes it if
-     * found. Returns false if command not found.
-     * 
-     * @param command
-     * @param player
-     * @param parameters
-     * @return
-     */
-    public static boolean parseServerConsoleCommand(MessageReceiver caller, String command, String[] args) {
-        if (instance == null)
-            instance = new ServerConsoleCommands();
+	/**
+	 * Performs a lookup for a command of the given name and executes it if
+	 * found. Returns false if command not found.
+	 * 
+	 * @param command
+	 * @param player
+	 * @param parameters
+	 * @return
+	 */
+	public static boolean parseServerConsoleCommand(MessageReceiver caller, String command, String[] args) {
+		if (instance == null)
+			instance = new ServerConsoleCommands();
 
-        BaseCommand cmd = instance.getCommand(command);
-        if (cmd != null) {
-            cmd.parseCommand(caller, args);
-            // Inform caller a matching command was found.
-            return true;
-        }
-        return false;
-    }
+		BaseCommand cmd = instance.getCommand(command);
+		if (cmd != null) {
+			cmd.parseCommand(caller, args);
+			// Inform caller a matching command was found.
+			return true;
+		}
+		return false;
+	}
 
-    public BaseCommand getCommand(String command) {
-        return commands.get(command);
-    }
+	public BaseCommand getCommand(String command) {
+		return commands.get(command);
+	}
 
-    public static final BaseCommand reload        = new BaseCommand("- Reloads VhMod") {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          etc.getInstance().load();
-                                                          etc.getInstance().loadData();
-                                                          for (Player p : etc.getServer().getPlayerList())
-                                                              p.getUser().reloadPlayer();
-                                                          log.info("VhMod reloaded by " + caller.getName());
-                                                          caller.notify("Successfully reloaded config");
-                                                      }
-                                                  };
+	public static final BaseCommand reload=new BaseCommand("- Reloads VhMod"){@Override void execute(MessageReceiver caller,String[]parameters){etc.getInstance().load();etc.getInstance().loadData();for(Player p:etc.getServer().getPlayerList())p.getUser().reloadPlayer();log.info("VhMod reloaded by "+caller.getName());caller.notify("Successfully reloaded config");}};
 
-    public static final BaseCommand modify        = new BaseCommand("[player] [key] [value] - Type /modify for more info", "Overriden onBadSyntax", 3) {
+	public static final BaseCommand modify        = new BaseCommand("[player] [key] [value] - Type /modify for more info", "Overriden onBadSyntax", 3) {
 
                                                       @Override
                                                       void execute(MessageReceiver caller, String[] parameters) {
@@ -196,76 +186,21 @@ public class ServerConsoleCommands {
                                                       }
                                                   };
 
-    public final static BaseCommand whitelist     = new BaseCommand("[operation (add or remove)] [player]", "whitelist [operation (toggle, add or remove)] <player>", 2) {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          if (parameters[1].equalsIgnoreCase("toggle"))
-                                                              caller.notify((etc.getInstance().toggleWhitelist() ? "Whitelist enabled" : "Whitelist disabled"));
-                                                          else if (parameters.length == 3) {
-                                                              if (parameters[1].equalsIgnoreCase("add")) {
-                                                                  etc.getDataSource().addToWhitelist(parameters[2]);
-                                                                  caller.notify(parameters[2] + " added to whitelist");
-                                                              } else if (parameters[1].equalsIgnoreCase("remove")) {
-                                                                  etc.getDataSource().removeFromWhitelist(parameters[2]);
-                                                                  caller.notify(parameters[2] + " removed from whitelist");
-                                                              } else
-                                                                  caller.notify("Invalid operation.");
-                                                          } else
-                                                              caller.notify("Invalid operation.");
-                                                      }
-                                                  };
+	public final static BaseCommand whitelist=new BaseCommand("[operation (add or remove)] [player]","whitelist [operation (toggle, add or remove)] <player>",2){@Override void execute(MessageReceiver caller,String[]parameters){if(parameters[1].equalsIgnoreCase("toggle"))caller.notify((etc.getInstance().toggleWhitelist()?"Whitelist enabled":"Whitelist disabled"));else if(parameters.length==3){if(parameters[1].equalsIgnoreCase("add")){etc.getDataSource().addToWhitelist(parameters[2]);caller.notify(parameters[2]+" added to whitelist");}else if(parameters[1].equalsIgnoreCase("remove")){etc.getDataSource().removeFromWhitelist(parameters[2]);caller.notify(parameters[2]+" removed from whitelist");}else caller.notify("Invalid operation.");}else caller.notify("Invalid operation.");}};
 
-    public final static BaseCommand reservelist   = new BaseCommand("[operation (add or remove)] [player]", "reservelist [operation (add or remove)] [player]", 3, 3) {
+	public final static BaseCommand reservelist=new BaseCommand("[operation (add or remove)] [player]","reservelist [operation (add or remove)] [player]",3,3){
 
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          if (parameters[1].equalsIgnoreCase("add")) {
-                                                              etc.getDataSource().addToReserveList(parameters[2]);
-                                                              caller.notify(parameters[2] + " added to reservelist");
-                                                          } else if (parameters[1].equalsIgnoreCase("remove")) {
-                                                              etc.getDataSource().removeFromReserveList(parameters[2]);
-                                                              caller.notify(parameters[2] + " removed from reservelist");
-                                                          } else
-                                                              caller.notify("Invalid operation.");
-                                                      }
-                                                  };
+	@Override void execute(MessageReceiver caller,String[]parameters){if(parameters[1].equalsIgnoreCase("add")){etc.getDataSource().addToReserveList(parameters[2]);caller.notify(parameters[2]+" added to reservelist");}else if(parameters[1].equalsIgnoreCase("remove")){etc.getDataSource().removeFromReserveList(parameters[2]);caller.notify(parameters[2]+" removed from reservelist");}else caller.notify("Invalid operation.");}};
 
-    public final static BaseCommand listplugins   = new BaseCommand("- Lists all plugins") {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          caller.notify("Plugins" + Colors.White + ": " + etc.getLoader().getPluginList());
-                                                      }
-                                                  };
+	public final static BaseCommand listplugins=new BaseCommand("- Lists all plugins"){@Override void execute(MessageReceiver caller,String[]parameters){caller.notify("Plugins"+Colors.White+": "+etc.getLoader().getPluginList());}};
 
-    public final static BaseCommand reloadplugin  = new BaseCommand("[plugin] - Reloads plugin", "Correct usage is: /reloadplugin [plugin]", 2) {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          if (etc.getLoader().reloadPlugin(parameters[1]))
-                                                              caller.notify("Plugin reloaded.");
-                                                          else
-                                                              caller.notify("Unable to reload plugin. Check capitalization and/or server logfile.");
-                                                      }
-                                                  };
+	public final static BaseCommand reloadplugin=new BaseCommand("[plugin] - Reloads plugin","Correct usage is: /reloadplugin [plugin]",2){@Override void execute(MessageReceiver caller,String[]parameters){if(etc.getLoader().reloadPlugin(parameters[1]))caller.notify("Plugin reloaded.");else caller.notify("Unable to reload plugin. Check capitalization and/or server logfile.");}};
 
-    public final static BaseCommand enableplugin  = new BaseCommand("[plugin] - Enables plugin", "Correct usage is: /enableplugin [plugin]", 2) {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          if (etc.getLoader().enablePlugin(parameters[1]))
-                                                              caller.notify("Plugin enabled.");
-                                                          else
-                                                              caller.notify("Unable to enable plugin. Check capitalization and/or server logfile.");
-                                                      }
-                                                  };
+	public final static BaseCommand enableplugin=new BaseCommand("[plugin] - Enables plugin","Correct usage is: /enableplugin [plugin]",2){@Override void execute(MessageReceiver caller,String[]parameters){if(etc.getLoader().enablePlugin(parameters[1]))caller.notify("Plugin enabled.");else caller.notify("Unable to enable plugin. Check capitalization and/or server logfile.");}};
 
-    public final static BaseCommand disableplugin = new BaseCommand("[plugin] - Disables plugin", "Correct usage is: /disableplugin [plugin]", 2) {
-                                                      @Override
-                                                      void execute(MessageReceiver caller, String[] parameters) {
-                                                          etc.getLoader().disablePlugin(parameters[1]);
-                                                          caller.notify("Plugin disabled.");
-                                                      }
-                                                  };
+	public final static BaseCommand disableplugin=new BaseCommand("[plugin] - Disables plugin","Correct usage is: /disableplugin [plugin]",2){@Override void execute(MessageReceiver caller,String[]parameters){etc.getLoader().disablePlugin(parameters[1]);caller.notify("Plugin disabled.");}};
 
-    public final static BaseCommand version       = new BaseCommand("- Displays the server version") {
+	public final static BaseCommand version       = new BaseCommand("- Displays the server version") {
                                                       @Override
                                                       void execute(MessageReceiver caller, String[] parameters) {
                                                           if (!etc.getInstance().getTainted())

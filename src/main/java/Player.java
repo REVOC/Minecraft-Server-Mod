@@ -1,9 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +8,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javafx.scene.control.SplitPane;
 import net.minecraft.server.MinecraftServer;
 
 /**
@@ -1103,11 +1096,12 @@ public class Player extends HumanEntity implements MessageReceiver {
 		if (player.hasNoGroups())
 			return true;
 		for (String str : player.getGroups()) {
-			if (isInGroup(str))
-				isInGroup = true;
-			else
-				continue;
-			break;
+			for (String g : groups) {
+				if (str.equals(g)) {
+					isInGroup = true;
+					return isInGroup;
+				}
+			}
 		}
 
 		return isInGroup;

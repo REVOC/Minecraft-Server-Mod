@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -30,7 +28,8 @@ public class OServerConfigurationManager {
 	private File j;
 	private File k;
 	private OPlayerNBTManager l;
-	private Pattern badChatPattern = Pattern.compile("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
+	private List<String> allowedCharSet = new ArrayList<String>(
+			Arrays.asList("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".split("")));
 
 	// TODO
 	// stuff
@@ -100,10 +99,12 @@ public class OServerConfigurationManager {
 	 * 
 	 */
 	public OEntityPlayerMP a(ONetLoginHandler paramONetLoginHandler, String paramString1, String paramString2) {
-		Matcher namematcher = badChatPattern.matcher(paramString1);
-		if (namematcher.find()) {
-			paramONetLoginHandler.a("Illegal characters '" + namematcher.group() + "' in username");
-			return null;
+		String[] username = paramString1.split("");
+		for (String N : username) {
+			if (!(allowedCharSet.contains(N))) {
+				paramONetLoginHandler.a("Illegal character \"" + N + "\"  in chat");
+				return null;
+			}
 		}
 
 		if (!etc.getLoader().isLoaded()) {
