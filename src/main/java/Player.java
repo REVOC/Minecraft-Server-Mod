@@ -715,7 +715,11 @@ public class Player extends HumanEntity implements MessageReceiver {
 					return;
 				String paramString2 = "* " + getColor() + getName() + Colors.White + " "
 						+ command.substring(command.indexOf(" ")).trim();
+				String emoteHook = "* " + getName() + " " + command.substring(command.indexOf(" ")).trim();
 				log.info("* " + getName() + " " + command.substring(command.indexOf(" ")).trim());
+				if ((Boolean) etc.getLoader().callHook(PluginLoader.Hook.CHAT, new Object[] { this, emoteHook })) {
+					return;
+				}
 				etc.getServer().messageAll(paramString2);
 			} else if (cmd.equalsIgnoreCase("/sethome")) {
 				// player.k, player.l, player.m

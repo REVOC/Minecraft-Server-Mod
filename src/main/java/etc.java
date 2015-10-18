@@ -533,6 +533,13 @@ public class etc {
 		} else if (split[0].equalsIgnoreCase("save-all")) {
 			dontParseRegular = false;
 			getServer().saveInventories();
+		} else if (split[0].equalsIgnoreCase("stop")) {
+			dontParseRegular = false;
+			String[] plugins = getLoader().getPluginList().split(",");
+			log.info("VhMod: Unloading plugins...");
+			for (String p : plugins) {
+				getLoader().disablePlugin(p.substring(0, p.length() - 4));
+			}
 		} else if (split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("mod-help")) {
 			if (split[0].equalsIgnoreCase("help")) {
 				dontParseRegular = false;
