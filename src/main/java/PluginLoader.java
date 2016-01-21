@@ -364,6 +364,7 @@ public class PluginLoader {
 				plugins.add(plugin);
 				plugin.initialize();
 			}
+			child.close();
 		} catch (Throwable ex) {
 			log.log(Level.SEVERE, "Exception while loading plugin", ex);
 			return false;
