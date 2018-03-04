@@ -31,7 +31,7 @@ public class Main {
 													// Beta1.2_01 obviously)
 	public static final long VCRC = 1677797663L; // version.txt
 
-	private static final String URL = "https://hackion.com/mirror/Minecraft/B1.2_01/";
+	private static final String URL = "https://raw.githubusercontent.com/dbrownidau/Minecraft-Server-Mod/master/jarjar/";
 
 	public static final Logger log = Logger.getLogger("Minecraft");
 
